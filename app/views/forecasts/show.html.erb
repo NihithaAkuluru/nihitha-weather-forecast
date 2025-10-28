@@ -1,0 +1,318 @@
+<div class="weather-container">
+  <div class="weather-header">
+    <h1>🌤️ Weather Forecast</h1>
+    <div class="location-info">
+      <h2><%= @forecast[:address] %></h2>
+      <% if @forecast[:postal_code].present? %>
+        <p class="postal-code">📍 <%= @forecast[:postal_code] %></p>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="current-weather">
+    <div class="current-temp">
+      <span class="temp-value"><%= @forecast[:current][:temperature] %></span>
+      <span class="temp-unit">°C</span>
+    </div>
+    <div class="current-details">
+      <div class="detail-item">
+        <span class="detail-icon">💨</span>
+        <span class="detail-value"><%= @forecast[:current][:windspeed] %> km/h</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="cache-status">
+    <% if @from_cache %>
+      <div class="status-badge status-cached">
+        <span class="status-icon">✅</span>
+        <span class="status-text">Cached Result</span>
+      </div>
+    <% else %>
+      <div class="status-badge status-live">
+        <span class="status-icon">🌐</span>
+        <span class="status-text">Live Data</span>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="forecast-section">
+    <h3>3-Day Forecast</h3>
+    <div class="forecast-grid">
+      <% if @forecast[:forecast].present? %>
+        <% @forecast[:forecast].each_with_index do |day, index| %>
+          <div class="forecast-day <%= 'today' if index == 0 %>">
+            <div class="day-header">
+              <span class="day-name">
+                <% if index == 0 %>
+                  Today
+                <% elsif index == 1 %>
+                  Tomorrow
+                <% else %>
+                  <%= Date.parse(day[:date]).strftime('%A') %>
+                <% end %>
+              </span>
+              <span class="day-date"><%= Date.parse(day[:date]).strftime('%b %d') %></span>
+            </div>
+            <div class="day-temps">
+              <span class="temp-high"><%= day[:high] %>°</span>
+              <span class="temp-low"><%= day[:low] %>°</span>
+            </div>
+            <div class="day-details">
+              <div class="detail-row">
+                <span class="detail-label">Wind:</span>
+                <span class="detail-value"><%= day[:windspeed] %> km/h</span>
+              </div>
+              <div class="detail-row">
+                <span class="detail-label">Rain:</span>
+                <span class="detail-value"><%= day[:precipitation] %> mm</span>
+              </div>
+              <% if day[:snowfall] > 0 %>
+                <div class="detail-row">
+                  <span class="detail-label">Snow:</span>
+                  <span class="detail-value"><%= day[:snowfall] %> cm</span>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      <% else %>
+        <div class="no-data">
+          <span class="no-data-icon">❌</span>
+          <span class="no-data-text">No forecast data available</span>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="actions">
+    <%= link_to "🔍 Search Again", root_path, class: "btn-secondary" %>
+  </div>
+</div>
+
+<style>
+.weather-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.weather-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.weather-header h1 {
+  color: #2c3e50;
+  margin-bottom: 1rem;
+  font-size: 2.5rem;
+}
+
+.location-info h2 {
+  color: #34495e;
+  margin-bottom: 0.5rem;
+  font-size: 1.8rem;
+}
+
+.postal-code {
+  color: #7f8c8d;
+  font-size: 1rem;
+}
+
+.current-weather {
+  background: linear-gradient(135deg, #74b9ff, #0984e3);
+  color: white;
+  padding: 2rem;
+  border-radius: 16px;
+  text-align: center;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 20px rgba(116, 185, 255, 0.3);
+}
+
+.current-temp {
+  margin-bottom: 1rem;
+}
+
+.temp-value {
+  font-size: 4rem;
+  font-weight: 300;
+}
+
+.temp-unit {
+  font-size: 2rem;
+  opacity: 0.8;
+}
+
+.current-details {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.detail-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.detail-icon {
+  font-size: 1.2rem;
+}
+
+.cache-status {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.status-cached {
+  background: #d4edda;
+  color: #155724;
+}
+
+.status-live {
+  background: #cce7ff;
+  color: #004085;
+}
+
+.forecast-section h3 {
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+}
+
+.forecast-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.forecast-day {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 2px solid #e9ecef;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.forecast-day:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.forecast-day.today {
+  border-color: #74b9ff;
+  background: linear-gradient(135deg, #f8f9fa, #e3f2fd);
+}
+
+.day-header {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.day-name {
+  display: block;
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 1.1rem;
+}
+
+.day-date {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+}
+
+.day-temps {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.temp-high {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #e74c3c;
+}
+
+.temp-low {
+  font-size: 1.2rem;
+  color: #3498db;
+  margin-left: 0.5rem;
+}
+
+.day-details {
+  font-size: 0.9rem;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.25rem;
+}
+
+.detail-label {
+  color: #7f8c8d;
+}
+
+.detail-value {
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.no-data {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 3rem;
+  color: #7f8c8d;
+}
+
+.no-data-icon {
+  font-size: 2rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.actions {
+  text-align: center;
+}
+
+.btn-secondary {
+  background: #6c757d;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background: #5a6268;
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .weather-container {
+    padding: 1rem;
+  }
+  
+  .forecast-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .current-details {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+</style>

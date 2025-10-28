@@ -1,0 +1,109 @@
+# IMPORTANT: Using 'require:' instead of 'plugins:' for RuboCop 1.59.0 compatibility in CI
+# CI environment uses RuboCop 1.59.0 which doesn't support the 'plugins:' syntax
+# Local development uses newer versions that prefer 'plugins:' but still accept 'require:'
+require:
+  - rubocop-performance
+  - rubocop-rails
+
+AllCops:
+  SuggestExtensions: false
+  NewCops: enable
+  RubyInterpreters:
+    - ruby
+    - macruby
+    - rake
+    - jruby
+    - rbx
+
+Rails/UnknownEnv:
+  Environments:
+    - development
+    - dev
+    - staging
+    - production
+    - test
+
+Layout/IndentationWidth:
+  Description: "Use 2 spaces for indentation."
+  StyleGuide: "#spaces-indentation"
+  Enabled: true
+  VersionAdded: "0.49"
+  Width: 2
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Layout/LineLength:
+  Enabled: true
+  Max: 260
+
+Metrics/AbcSize:
+  Enabled: false
+
+Metrics/BlockLength:
+  Enabled: false
+
+Metrics/CyclomaticComplexity:
+  Enabled: false
+  Max: 30
+
+Metrics/MethodLength:
+  Enabled: false
+
+Metrics/PerceivedComplexity:
+  Enabled: false
+  Max: 25
+
+Metrics/ParameterLists:
+  Enabled: false
+
+Metrics/ClassLength:
+  Enabled: false
+
+Rails/SkipsModelValidations:
+  Enabled: false
+
+Metrics/ModuleLength:
+  Enabled: false
+
+Rails/LexicallyScopedActionFilter:
+  Enabled: false
+
+Rails/InverseOf:
+  Enabled: false
+
+Rails/RedundantForeignKey:
+  Enabled: false
+
+Metrics/BlockNesting:
+  Enabled: false
+
+Rails/Validation:
+  Enabled: false
+
+Rails/I18nLocaleTexts:
+  Enabled: true
+
+Rails/Delegate:
+  Enabled: false
+
+Lint/NestedMethodDefinition:
+  Enabled: false
+
+Naming/VariableNumber:
+  Enabled: false
+
+Style/OptionalBooleanParameter:
+  Enabled: false
+
+Style/DocumentationMethod:
+  Enabled: true
+
+Rails/ActionOrder:
+  Enabled: false

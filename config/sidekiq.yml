@@ -1,0 +1,4 @@
+:schedule:
+  refresh_weather_cache:
+    cron: "*/30 * * * *"  # every 30 minutes
+    class: "ForecastRefresherWorker"
